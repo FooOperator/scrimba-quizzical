@@ -1,23 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import StartScreen from "./components/StartScreen";
+import React from 'react'
+import Question from "./components/Question";
+import Questionare from "./components/Questionare";
+import { nanoid } from "nanoid";
 
 function App() {
+  const [isRunning, setIsRunning] = React.useState(false)
+  const [questions, setQuestions] = React.useState({})
+
+  React.useEffect(() => {
+    fetch('https://opentdb.com/api.php?amount=10')
+      .then(res => res.json())
+      .then(data => setQuestions(data.results.map(item =>
+      (
+        {
+          ...item,
+          id: nanoid()
+        }
+      )
+      )))
+
+
+    console.log(questions)
+  }, [!isRunning])
+
+  function startGame() {
+    setIsRunning(true)
+  }
+
+  function handleSubmit() {
+    console.log('answers submitted')
+  }
+
+  function handleClear() {
+    console.log('answers cleared!')
+  }
+
+  function handleCheck(event, id) {
+    console.log(id)
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        !isRunning ?
+          <StartScreen startGame={startGame} /> :
+          <Questionare
+            questions={questions}
+            handleSubmit={handleSubmit}
+            handleClear={handleClear}
+            handleCheck={handleCheck}
+          />
+      }
     </div>
   );
 }
