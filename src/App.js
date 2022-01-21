@@ -9,7 +9,7 @@ function App() {
   const [questions, setQuestions] = React.useState({})
 
   React.useEffect(() => {
-    fetch('https://opentdb.com/api.php?amount=10')
+    fetch('https://opentdb.com/api.php?amount=5')
       .then(res => res.json())
       .then(data => setQuestions(data.results.map(item =>
       (
@@ -36,8 +36,8 @@ function App() {
     console.log('answers cleared!')
   }
 
-  function handleCheck(event, id) {
-    console.log(id)
+  function handleClick(event, id) {
+    console.log(`${id} clicked`)
   }
 
   return (
@@ -49,7 +49,7 @@ function App() {
             questions={questions}
             handleSubmit={handleSubmit}
             handleClear={handleClear}
-            handleCheck={handleCheck}
+            handleClick={handleClick}
           />
       }
     </div>
