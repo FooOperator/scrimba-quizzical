@@ -1,6 +1,6 @@
 import React from 'react'
+import { Row, Col, Container, Stack } from 'react-bootstrap'
 import Select from 'react-select'
-import makeAnimated from 'react-select/animated'
 
 const StartScreen = (props) => {
     /*
@@ -24,16 +24,18 @@ const StartScreen = (props) => {
     ]
 
     const getInfo = () => {
-        
+
     }
 
     return (
-        <div>
-            <h1>Start Screen</h1>
-            <Select options={difficultyOptions} onChange={getInfo} />
-            <Select options={typeOptions} onChange={getInfo} />
-            <button onClick={props.startGame}>Start Game</button>
-        </div>
+        <>
+            <h1>Quizzical</h1>
+            <Stack direction='horizontal' gap={2}>
+                <Select options={difficultyOptions} onChange={getInfo} />
+                <Select options={typeOptions} onChange={getInfo} />
+                <button onClick={props.startGame}>Start Game</button>
+            </Stack>
+        </>
     )
 }
 
