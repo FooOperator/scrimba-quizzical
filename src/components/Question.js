@@ -1,6 +1,8 @@
 import { nanoid } from "nanoid";
+import { ButtonGroup, Card } from "react-bootstrap";
+import Answer from './Answer'
 
-const Question = ({ question, handleCheck }) => {
+const Question = ({ question, handleClick }) => {
     const shuffledAnswers = [...question.incorrect_answers, question.correct_answer]
 
     function shuffleArray() {
@@ -13,33 +15,30 @@ const Question = ({ question, handleCheck }) => {
     shuffleArray()
 
     return (
-        <div>
-            <h2>{question.question}</h2>
-            {
-                <ul>
-                    {
-                        shuffledAnswers.map(answer =>
-                            <Answer
-                                id={nanoid()}
-                                answer={answer}
-                                name={`${question.question}-group`}
-                                handleCheck={handleCheck}
-                            />
-                        )
-                    }
-                </ul>
-            }
-        </div>
+        <Card>
+            <Card.Body>
+                <Card.Title>
+                    {question.question}
+                </Card.Title>
+                {
+                    <ButtonGroup className='mb-2 d-flex justify-content-center'>
 
-    )
-}
+                        {
+                            shuffledAnswers.map(answer =>
+                                <Answer
+                                    id={nanoid()}
+                                    answer={answer}
+                                    name={`${question.question}-group`}
+                                    handleClick={handleClick}
+                                />
+                            )
+                        }
+                    </ButtonGroup>
 
-const Answer = (props) => {
-    return (
-        <li>
-            <input type='radio' id={props.id} name={props.name} onChange={(event) => props.handleCheck(event, props.id)} />
-            <label htmlFor={props.id}>{props.answer}</label>
-        </li>
+                }
+            </Card.Body>
+        </Card>
+
     )
 }
 
