@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Container, Stack } from 'react-bootstrap'
+import { Row, Col, Container, Stack, Form, Button } from 'react-bootstrap'
 import Select from 'react-select'
 
 const StartScreen = (props) => {
@@ -30,11 +30,19 @@ const StartScreen = (props) => {
     return (
         <>
             <h1>Quizzical</h1>
-            <Stack direction='horizontal' gap={2}>
-                <Select options={difficultyOptions} onChange={getInfo} />
-                <Select options={typeOptions} onChange={getInfo} />
-                <button onClick={props.startGame}>Start Game</button>
-            </Stack>
+            <Form>
+                <Form.Group className="mb-3" controlId="formDifficulty">
+                    <Form.Label>Select Difficulty</Form.Label>
+                    <Select options={difficultyOptions} />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicPassword">
+                    <Form.Label>Select Type</Form.Label>
+                    <Select options={typeOptions} />
+                </Form.Group>
+                <Button variant="primary" onClick={props.startGame}>
+                    Start Game
+                </Button>
+            </Form>
         </>
     )
 }
