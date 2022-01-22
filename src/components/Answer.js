@@ -5,8 +5,9 @@ const Answer = (props) => {
     return (
         <Button
             variant={props.clicked ? 'primary' : 'secondary'}
-            onClick={(event) => props.handleClick(event, props.id)}
+            onClick={(event) => props.handleClick(event, props.answerId, props.questionId)}
             className={`border ${props.clicked ? 'border-secondary' : 'border-dark'} border-3 rounded`}
+
         >
             {props.answer}
         </Button>
