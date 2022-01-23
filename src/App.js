@@ -1,27 +1,27 @@
 import StartScreen from "./components/StartScreen";
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Question from "./components/Question";
 import Questionare from "./components/Questionare";
 import { nanoid } from "nanoid";
 
 function App() {
-  const [isRunning, setIsRunning] = React.useState(false)
-  const [questions, setQuestions] = React.useState({})
-  const [indexOfSelectedAnswers, setIndexOfSelectedAnswers] = React.useState()
-
-  const quizOptions = {
-    numberOfQuestions: 5,
+  const [isRunning, setIsRunning] = useState(false)
+  const [maySubmit, setMaySubmit] = useState(false)
+  const [questions, setQuestions] = useState({})
+  const [indexOfSelectedAnswers, setIndexOfSelectedAnswers] = useState({})
+  const [quizOptions, setQuizOptions] = useState({
+    numberOfQuestions: 10,
     category: 9,
     difficulty: '',
     type: '',
     encoding: '',
-  }
+  })
+  const [quizUrl, setQuizUrl] = useState(
+    `https://opentdb.com/api.php?amount=${quizOptions.numberOfQuestions}`
+  )
 
-  const quizUrl = `https://opentdb.com/api.php?amount=${quizOptions.numberOfQuestions ? `${quizOptions.numberOfQuestions}` : `1`}${quizOptions.category ? `&category=${quizOptions.category}` : ``}${quizOptions.difficulty ? `&difficulty=${quizOptions.difficulty}` : ``}${quizOptions.type ? `&type=${quizOptions.type}` : ``}`
 
-
-  React.useEffect(() => {
-    console.log(quizUrl)
+  useEffect(() => {
     fetch(quizUrl)
       .then(res => res.json())
       .then(data => setQuestions(data.results.map(item => {
@@ -60,6 +60,17 @@ function App() {
     console.log('game ended')
   }
 
+  function handleChangeOnStartScreen(event) {
+    const { name, value, type, checked } = event
+
+    setQuizOptions(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+    setQuizUrl(`https://opentdb.com/api.php?amount=${quizOptions.numberOfQuestions ? `${quizOptions.numberOfQuestions}` : `1`}${quizOptions.category ? `&category=${quizOptions.category}` : ``}${quizOptions.difficulty ? `&difficulty=${quizOptions.difficulty}` : ``}${quizOptions.type ? `&type=${quizOptions.type}` : ``}`)
+    console.log(quizUrl)
+  }
+
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -75,25 +86,38 @@ function App() {
     // console.log(`index of question in questions array: ${index}`)
     const { isCorrect } = questions[index].answers.find(answer => answer.id === answerId)
     // console.log(`is this answer correct?\n${isCorrect}`)
+    const length = Object.keys(indexOfSelectedAnswers).length
 
     setIndexOfSelectedAnswers(prev => ({
       ...prev,
       [questionId]: answerId
     }))
-
-    console.log(indexOfSelectedAnswers)
+    setMaySubmit(prev => {
+      if (length === quizOptions.numberOfQuestions) {
+        return true
+      } else {
+        return prev
+      }
+    })
+    console.log(maySubmit)
+    console.log(length)
   }
 
   return (
     <div className="App">
       {
         !isRunning ?
-          <StartScreen startGame={startGame} /> :
+          <StartScreen
+            startGame={startGame}
+            handleChange={handleChangeOnStartScreen}
+            quizOptions={quizOptions}
+          /> :
           <Questionare
             questions={questions}
             handleSubmit={handleSubmit}
             handleClear={handleClear}
             handleClick={handleClick}
+            maySubmit={maySubmit}
           />
       }
     </div>
