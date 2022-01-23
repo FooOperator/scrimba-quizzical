@@ -1,6 +1,6 @@
 import React from 'react'
-import { Row, Col, Container, Stack, Form, Button } from 'react-bootstrap'
 import Select from 'react-select'
+import { Form, Button, InputGroup, FormControl } from 'react-bootstrap'
 
 const StartScreen = (props) => {
     /*
@@ -13,31 +13,31 @@ const StartScreen = (props) => {
     */
 
     const difficultyOptions = [
-        { value: 'easy', label: 'Easy' },
-        { value: 'medium', label: 'Medium' },
-        { value: 'hard', label: 'Hard' },
+        { value: 'easy', label: 'Easy', name: 'difficulty' },
+        { value: 'medium', label: 'Medium', name: 'difficulty' },
+        { value: 'hard', label: 'Hard', name: 'difficulty' },
     ]
 
     const typeOptions = [
-        { value: 'multiple', label: 'Multiple-Choice' },
-        { value: 'truefalse', label: 'True / False' },
+        { value: 'multiple', label: 'Multiple-Choice', name: 'type' },
+        { value: 'truefalse', label: 'True / False', name: 'type' },
     ]
-
-    const getInfo = () => {
-
-    }
 
     return (
         <>
             <h1>Quizzical</h1>
             <Form>
+                <InputGroup>
+                    <InputGroup.Text>Number Of Questions</InputGroup.Text>
+                    <FormControl name='numberOfQuestions' onChange={(event) => props.handleChange(event)} />
+                </InputGroup>
                 <Form.Group className="mb-3" controlId="formDifficulty">
                     <Form.Label>Select Difficulty</Form.Label>
-                    <Select options={difficultyOptions} />
+                    <Select name="difficulty" options={difficultyOptions} onChange={(event) => props.handleChange(event)} />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                     <Form.Label>Select Type</Form.Label>
-                    <Select options={typeOptions} />
+                    <Select name="type" options={typeOptions} onChange={(event) => props.handleChange(event)} />
                 </Form.Group>
                 <Button variant="primary" onClick={props.startGame}>
                     Start Game
