@@ -1,6 +1,6 @@
 import React from "react";
 import { nanoid } from "nanoid";
-import { ButtonGroup, Card } from "react-bootstrap";
+import { Form, Card } from "react-bootstrap";
 import Answer from './Answer'
 
 const Question = ({ question: data, handleClick }) => {
@@ -13,11 +13,12 @@ const Question = ({ question: data, handleClick }) => {
                     {data.question}
                 </Card.Title>
                 {
-                    <ButtonGroup className='mb-2 d-flex justify-content-center'>
+                    <Form className='mb-2 d-flex justify-content-center'>
 
                         {
                             shuffledAnswers.map(answer =>
                                 <Answer
+                                    key={nanoid()}
                                     answerId={answer.id}
                                     questionId={data.id}
                                     answer={answer.answer}
@@ -27,7 +28,7 @@ const Question = ({ question: data, handleClick }) => {
                                 />
                             )
                         }
-                    </ButtonGroup>
+                    </Form>
 
                 }
             </Card.Body>
