@@ -1,8 +1,8 @@
 import { Form } from "react-bootstrap";
 import React from 'react'
 import { nanoid } from "nanoid";
-const Answer = (props) => {
 
+const Answer = (props) => {
     return (
         <div>
             <Form.Check
