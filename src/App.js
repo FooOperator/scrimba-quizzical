@@ -1,55 +1,88 @@
 import StartScreen from "./components/StartScreen";
-import React, { useState, useEffect } from 'react'
-import Question from "./components/Question";
+import React, { useState, useEffect, useRef } from 'react'
 import Questionare from "./components/Questionare";
 import { nanoid } from "nanoid";
 
+var timesItRan = 0
 function App() {
+
+  const shouldFetch = useRef(false)
+  const displayAlert = useRef(false)
+
   const [isRunning, setIsRunning] = useState(false)
   const [maySubmit, setMaySubmit] = useState(false)
-  const [questions, setQuestions] = useState({})
-  const [indexOfSelectedAnswers, setIndexOfSelectedAnswers] = useState({})
+  const [questions, setQuestions] = useState([])
+  const [selectedAnswers, setSelectedAnswers] = useState([])
   const [quizOptions, setQuizOptions] = useState({
-    numberOfQuestions: 10,
+    numberOfQuestions: 3,
     category: 9,
     difficulty: '',
     type: '',
     encoding: '',
   })
+
   const [quizUrl, setQuizUrl] = useState(
     `https://opentdb.com/api.php?amount=${quizOptions.numberOfQuestions}`
   )
 
+  useEffect(() => {
+    if (shouldFetch.current) {
+      fetch(quizUrl)
+        .then(res => res.json())
+        .then(data => setQuestions(prev => data.results.map(item => {
+          const { correct_answer, incorrect_answers, type, question } = item
+          const answers = [...incorrect_answers, correct_answer]
+
+          return {
+            id: nanoid(),
+            question: question,
+            type: type,
+            answers: answers.map((answer, i) => ({
+              id: nanoid(),
+              answer: answer,
+              isCorrect: i === answers.length - 1 ? true : false,
+              selected: false
+            }))
+          }
+        }
+        )))
+      console.log('fetched')
+    }
+    // console.log(questions)
+    // timesItRan++
+    // console.log(`App.useEffect ran ${timesItRan} times`)
+  }, [isRunning])
 
   useEffect(() => {
-    fetch(quizUrl)
-      .then(res => res.json())
-      .then(data => setQuestions(data.results.map(item => {
-        const { correct_answer, incorrect_answers, type, question } = item
-        const answers = [...incorrect_answers, correct_answer]
-
-        return {
-          id: nanoid(),
-          question: question,
-          type: type,
-          answers: answers.map((answer, i) => ({
-            id: nanoid(),
-            answer: answer,
-            isCorrect: i === answers.length - 1 ? true : false,
-            selected: false
-          })),
-        }
+    setSelectedAnswers(prev => questions.map(item => {
+      const { answers } = item
+      const correct_answer = answers.find(answer => answer.isCorrect).id
+      return {
+        questionId: item.id,
+        correctAnswerId: correct_answer,
+        selectedAnswerId: ''
       }
-      )))
-    console.log(questions)
-  }, [!isRunning])
+    }))
+  }, [questions])
 
   function startGame() {
     setIsRunning(true)
+    shouldFetch.current = true
   }
 
   function handleSubmit() {
-    console.log('answers submitted')
+
+    function getScore(score, curr) {
+      if (curr.selectedAnswerId === curr.correctAnswerId) {
+        return score + 1
+      }
+      return score
+    }
+
+    let score = selectedAnswers.reduce((score, curr) => getScore(score, curr), 0)
+    console.log(`${score} out of ${questions.length}`)
+    console.log(Object.entries(selectedAnswers))
+    displayAlert.current = true
   }
 
   function handleClear() {
@@ -71,27 +104,19 @@ function App() {
     console.log(quizUrl)
   }
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
-
-  function handleClick(event, answerId, questionId) {
+  function handleAnswerClick(event, selectedAnswerId, questionId) {
     console.clear()
-    // console.log(`id: ${answerId}`)
-    // console.log(`question: ${questionId}`)
-    const index = questions.findIndex(question => question.id === questionId)
-    // console.log(`index of question in questions array: ${index}`)
-    const { isCorrect } = questions[index].answers.find(answer => answer.id === answerId)
-    // console.log(`is this answer correct?\n${isCorrect}`)
-    const length = Object.keys(indexOfSelectedAnswers).length
+    const questionIndex = questions.findIndex(question => question.id === questionId)
+    const answerIndex = questions[questionIndex].answers.findIndex(answer => answer.id === selectedAnswerId)
 
-    setIndexOfSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answerId
-    }))
+    console.log(`${questionId} in index ${questionIndex}`)
+    console.log(`${selectedAnswerId} in index ${answerIndex}`)
+
+    setSelectedAnswers(prev => prev.map(item =>
+      item.questionId === questionId ? { ...item, selectedAnswerId: selectedAnswerId } : item
+    ))
+
+    const length = Object.keys(selectedAnswers).length
     setMaySubmit(prev => {
       if (length === quizOptions.numberOfQuestions) {
         return true
@@ -99,8 +124,8 @@ function App() {
         return prev
       }
     })
-    console.log(maySubmit)
-    console.log(length)
+
+    console.log(selectedAnswers)
   }
 
   return (
@@ -116,10 +141,12 @@ function App() {
             questions={questions}
             handleSubmit={handleSubmit}
             handleClear={handleClear}
-            handleClick={handleClick}
+            handleClick={handleAnswerClick}
             maySubmit={maySubmit}
+            displayAlert={displayAlert}
           />
       }
+
     </div>
   );
 }
