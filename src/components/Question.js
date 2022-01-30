@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { Form, Card } from "react-bootstrap";
 import Answer from './Answer'
 
-const Question = ({ questionData, handleClick }) => {
+const Question = ({ questionData, handleClick, disabled }) => {
     const shuffledAnswers = questionData.answers
     const answersArray = questionData.answers.map(answer => answer.id)
     console.log(`For question ${questionData.id}`)
@@ -18,14 +18,13 @@ const Question = ({ questionData, handleClick }) => {
                 {
                     <Form className='mb-2 d-flex justify-content-center'>
                         {
-                            shuffledAnswers.map(answer => {
+                            shuffledAnswers.map(answerData => {
                                 return <Answer
                                     key={nanoid()}
-                                    answerId={answer.id}
-                                    questionId={questionData.id}
-                                    answer={answer.answer}
-                                    question={questionData.question}
                                     name={`${questionData.question}-group`}
+                                    answerData={answerData}
+                                    questionData={questionData}
+                                    disabled={disabled}
                                     handleClick={handleClick}
                                 />
                             })
@@ -35,7 +34,6 @@ const Question = ({ questionData, handleClick }) => {
                 }
             </Card.Body>
         </Card>
-
     )
 }
 
