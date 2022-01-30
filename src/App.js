@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import Questionare from "./components/Questionare";
 import { nanoid } from "nanoid";
 
-var timesItRan = 0
 function App() {
-
   const shouldFetch = useRef(false)
-  const displayAlert = useRef(false)
+  const shouldDisplayAlert = useRef(false)
 
+  const [score, setScore] = useState(0)
+  const [quizDisabled, setQuizDisabled] = useState(true)
   const [isRunning, setIsRunning] = useState(false)
   const [maySubmit, setMaySubmit] = useState(false)
   const [questions, setQuestions] = useState([])
@@ -26,7 +26,7 @@ function App() {
   )
 
   useEffect(() => {
-    if (shouldFetch.current) {
+    function fetchQuizData() {
       fetch(quizUrl)
         .then(res => res.json())
         .then(data => setQuestions(prev => data.results.map(item => {
@@ -46,11 +46,11 @@ function App() {
           }
         }
         )))
+    }
+    if (shouldFetch.current) {
+      fetchQuizData()
       console.log('fetched')
     }
-    // console.log(questions)
-    // timesItRan++
-    // console.log(`App.useEffect ran ${timesItRan} times`)
   }, [isRunning])
 
   useEffect(() => {
@@ -65,8 +65,15 @@ function App() {
     }))
   }, [questions])
 
+  useEffect(() => {
+    setMaySubmit(prev => {
+      return selectedAnswers.find(answer => answer.selectedAnswerId === '') ? false : true
+    })
+  }, [selectedAnswers])
+
   function startGame() {
     setIsRunning(true)
+    setQuizDisabled(false)
     shouldFetch.current = true
   }
 
@@ -79,10 +86,13 @@ function App() {
       return score
     }
 
-    let score = selectedAnswers.reduce((score, curr) => getScore(score, curr), 0)
-    console.log(`${score} out of ${questions.length}`)
-    console.log(Object.entries(selectedAnswers))
-    displayAlert.current = true
+    let res = selectedAnswers.reduce((score, curr) => getScore(score, curr), 0)
+    // console.log(`${res} out of ${questions.length}`)
+    setScore(res)
+    // console.log(Object.entries(selectedAnswers))
+    shouldDisplayAlert.current = true
+    setQuizDisabled(true)
+    console.log(quizDisabled)
   }
 
   function handleClear() {
@@ -109,23 +119,12 @@ function App() {
     const questionIndex = questions.findIndex(question => question.id === questionId)
     const answerIndex = questions[questionIndex].answers.findIndex(answer => answer.id === selectedAnswerId)
 
-    console.log(`${questionId} in index ${questionIndex}`)
-    console.log(`${selectedAnswerId} in index ${answerIndex}`)
+    // console.log(`${questionId} in index ${questionIndex}`)
+    // console.log(`${selectedAnswerId} in index ${answerIndex}`)
 
     setSelectedAnswers(prev => prev.map(item =>
       item.questionId === questionId ? { ...item, selectedAnswerId: selectedAnswerId } : item
     ))
-
-    const length = Object.keys(selectedAnswers).length
-    setMaySubmit(prev => {
-      if (length === quizOptions.numberOfQuestions) {
-        return true
-      } else {
-        return prev
-      }
-    })
-
-    console.log(selectedAnswers)
   }
 
   return (
@@ -143,7 +142,9 @@ function App() {
             handleClear={handleClear}
             handleClick={handleAnswerClick}
             maySubmit={maySubmit}
-            displayAlert={displayAlert}
+            displayAlert={shouldDisplayAlert}
+            score={score}
+            disabled={quizDisabled}
           />
       }
 
