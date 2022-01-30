@@ -1,23 +1,30 @@
 import { nanoid } from "nanoid";
-import { Button, ButtonGroup, Alert} from "react-bootstrap";
+import { Button, ButtonGroup, Alert } from "react-bootstrap";
 import Question from "./Question";
 
 const Questionare = (props) => {
-    
+    const correctPercentage = parseInt((props.score * 100) / props.questions.length)
     const scoreAlert = (
-        <Alert className='mt-1'>
+        <Alert className='mt-2'>
             <Alert.Heading>
                 Quiz Complete!
             </Alert.Heading>
             <hr />
-            <p>You have correctly choosen <b>{}</b> out of <b>{props.questions.length}</b> answers</p>
-            <p>Meaning, you got <b>55%</b> of the quiz right!</p>
+            <p>You have correctly choosen <b>{props.score}</b> out of <b>{props.questions.length}</b> answers</p>
+            <p>Meaning, you got <b>{correctPercentage}%</b> of the quiz right!</p>
         </Alert>
     )
-
+    
     return (
         <div style={{ width: '45vw', margin: 'auto auto' }} className="mt-4">
-            {props.questions.map(question => <Question questionData={question} handleClick={props.handleClick} key={nanoid()} />)}
+            {
+                props.questions.map(question => <Question
+                    key={nanoid()}
+                    questionData={question}
+                    handleClick={props.handleClick}
+                    disabled={props.quizDisabled}
+                />)
+            }
             <ButtonGroup className='d-flex justify-content-center' >
                 <Button
                     variant='success'
