@@ -10,7 +10,7 @@ const Question = ({ questionData, handleClick, disabled }) => {
     console.log(answersArray)
     
     return (
-        <Card>
+        <Card className="bg-dark border-0">
             <Card.Body>
                 <Card.Title>
                     {questionData.question}
