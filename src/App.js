@@ -1,20 +1,24 @@
 import StartScreen from "./components/StartScreen";
+import { Helmet } from 'react-helmet'
 import React, { useState, useEffect, useRef } from 'react'
 import Questionare from "./components/Questionare";
 import { nanoid } from "nanoid";
+import { getScore } from './utils'
 
 function App() {
   const shouldFetch = useRef(false)
-  const shouldDisplayAlert = useRef(false)
+  const gameOver = useRef(false)
+  
+  const scoreAlertRef = useRef(null)
 
-  const [score, setScore] = useState(0)
   const [quizDisabled, setQuizDisabled] = useState(true)
   const [isRunning, setIsRunning] = useState(false)
   const [maySubmit, setMaySubmit] = useState(false)
   const [questions, setQuestions] = useState([])
+  const [score, setScore] = useState(0)
   const [selectedAnswers, setSelectedAnswers] = useState([])
   const [quizOptions, setQuizOptions] = useState({
-    numberOfQuestions: 3,
+    numberOfQuestions: 5,
     category: 9,
     difficulty: '',
     type: '',
@@ -71,6 +75,10 @@ function App() {
     })
   }, [selectedAnswers])
 
+  function scrollToRef(ref) {
+    ref.current.scrollIntoView()
+  }
+
   function startGame() {
     setIsRunning(true)
     setQuizDisabled(false)
@@ -78,21 +86,14 @@ function App() {
   }
 
   function handleSubmit() {
-
-    function getScore(score, curr) {
-      if (curr.selectedAnswerId === curr.correctAnswerId) {
-        return score + 1
-      }
-      return score
-    }
-
     let res = selectedAnswers.reduce((score, curr) => getScore(score, curr), 0)
     // console.log(`${res} out of ${questions.length}`)
     setScore(res)
     // console.log(Object.entries(selectedAnswers))
-    shouldDisplayAlert.current = true
+    gameOver.current = true
     setQuizDisabled(true)
-    console.log(quizDisabled)
+    // console.log(quizDisabled)
+    scrollToRef(scoreAlertRef)
   }
 
   function handleClear() {
@@ -128,7 +129,13 @@ function App() {
   }
 
   return (
-    <div className="App">
+
+    <div className="App text-light">
+      <>
+        <Helmet>
+          <style>{'body { background-color: rgb(33,37,41); }'}</style>
+        </Helmet>
+      </>
       {
         !isRunning ?
           <StartScreen
@@ -142,9 +149,10 @@ function App() {
             handleClear={handleClear}
             handleClick={handleAnswerClick}
             maySubmit={maySubmit}
-            displayAlert={shouldDisplayAlert}
+            gameOver={gameOver}
             score={score}
             disabled={quizDisabled}
+            scoreAlertRef={scoreAlertRef}
           />
       }
 
