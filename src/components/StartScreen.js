@@ -24,13 +24,13 @@ const StartScreen = (props) => {
     ]
 
     return (
-        <>
-            <h1>Quizzical</h1>
+        <div style={{ width: '45vw', margin: 'auto auto' }} className='mt-5' >
+            <h1 className='text-center'>Quizzical</h1>
             <Form>
-                <InputGroup>
-                    <InputGroup.Text>Number Of Questions</InputGroup.Text>
+                <Form.Group className="mb-3" controlId="formNumberOfQuestions">
+                    <Form.Label>Number Of Questions</Form.Label>
                     <FormControl name='numberOfQuestions' onChange={(event) => props.handleChange(event)} />
-                </InputGroup>
+                </Form.Group>
                 <Form.Group className="mb-3" controlId="formDifficulty">
                     <Form.Label>Select Difficulty</Form.Label>
                     <Select name="difficulty" options={difficultyOptions} onChange={(event) => props.handleChange(event)} />
@@ -39,11 +39,11 @@ const StartScreen = (props) => {
                     <Form.Label>Select Type</Form.Label>
                     <Select name="type" options={typeOptions} onChange={(event) => props.handleChange(event)} />
                 </Form.Group>
-                <Button variant="primary" onClick={props.startGame}>
+                <Button className='w-100 mt-5' variant="primary" onClick={props.startGame}>
                     Start Game
                 </Button>
             </Form>
-        </>
+        </div>
     )
 }
 
