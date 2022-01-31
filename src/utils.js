@@ -4,3 +4,9 @@ export function shuffleArray(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
+export function getScore(score, curr) {
+    if (curr.selectedAnswerId === curr.correctAnswerId) {
+        return score + 1
+    }
+    return score
+}
