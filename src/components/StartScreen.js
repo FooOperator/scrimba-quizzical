@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import { Form, Button, InputGroup, FormControl } from 'react-bootstrap'
+import { Form, Button, FormControl } from 'react-bootstrap'
 
 const StartScreen = (props) => {
     /*
