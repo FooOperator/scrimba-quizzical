@@ -67,7 +67,7 @@ function App() {
       fetchQuizData()
       console.log('fetched')
     }
-  }, [isRunning])
+  }, [isRunning, quizUrl])
 
   useEffect(() => {
     setSelectedAnswers(prev => questions.map(item => {
@@ -112,10 +112,6 @@ function App() {
     console.log('answers cleared!')
   }
 
-  function endGame() {
-    console.log('game ended')
-  }
-
   function handleChangeOnStartScreen(event) {
     const { name, value, type, checked } = event
 
@@ -143,6 +139,8 @@ function App() {
   }
 
   function quickRestart() {
+    resetStates()
+    startGame()
     console.log('quick restart')
   }
 
@@ -157,6 +155,12 @@ function App() {
     setSelectedAnswers(prev => prev.map(item =>
       item.questionId === questionId ? { ...item, selectedAnswerId: selectedAnswerId } : item
     ))
+    // setQuestions(prev => prev.map(question =>
+    //   question.id === questionId ? {
+    //     ...question, answers: question.answers.map(answer =>
+    //       answer.id === selectedAnswerId ? { ...answer, selected: true } : answer)
+    //   } : question
+    // ))
   }
 
   return (
