@@ -15,5 +15,5 @@ Features/To Do:
 
 * [x] Fetch an array of multiple-choice and True/False questions
 * [x] Score the user at the end of the quiz
+* [x] Functional game loop
 * [ ] Allow users to clear answers
-* [ ] Functional game loop
