@@ -1,7 +1,7 @@
 import StartScreen from "./components/StartScreen";
 import { Helmet } from 'react-helmet'
 import React, { useState, useEffect, useRef } from 'react'
-import Questionare from "./components/Questionare";
+import Questionnaire from "./components/Questionnaire";
 import { nanoid } from "nanoid";
 import { getScore } from './utils'
 
@@ -178,7 +178,7 @@ function App() {
             handleChange={handleChangeOnStartScreen}
             quizOptions={quizOptions}
           /> :
-          <Questionare
+          <Questionnaire
             questions={questions}
             handleSubmit={handleSubmit}
             handleClear={handleClear}
