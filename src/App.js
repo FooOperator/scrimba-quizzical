@@ -5,25 +5,37 @@ import Questionare from "./components/Questionare";
 import { nanoid } from "nanoid";
 import { getScore } from './utils'
 
-function App() {
-  const shouldFetch = useRef(false)
-  const gameOver = useRef(false)
-  
-  const scoreAlertRef = useRef(null)
-
-  const [quizDisabled, setQuizDisabled] = useState(true)
-  const [isRunning, setIsRunning] = useState(false)
-  const [maySubmit, setMaySubmit] = useState(false)
-  const [questions, setQuestions] = useState([])
-  const [score, setScore] = useState(0)
-  const [selectedAnswers, setSelectedAnswers] = useState([])
-  const [quizOptions, setQuizOptions] = useState({
+const initialStates = {
+  scoreAlertRef: null,
+  shouldFetch: false,
+  gameOver: false,
+  quizDisabled: true,
+  isRunning: false,
+  maySubmit: false,
+  score: 0,
+  quizOptions: {
     numberOfQuestions: 5,
     category: 9,
     difficulty: '',
     type: '',
     encoding: '',
-  })
+  },
+  selectedAnswers: [],
+  questions: []
+}
+
+function App() {
+  const shouldFetch = useRef(initialStates.shouldFetch)
+  const gameOver = useRef(initialStates.gameOver)
+  const scoreAlertRef = useRef(initialStates.scoreAlertRef)
+
+  const [quizDisabled, setQuizDisabled] = useState(initialStates.quizDisabled)
+  const [isRunning, setIsRunning] = useState(initialStates.isRunning)
+  const [maySubmit, setMaySubmit] = useState(initialStates.maySubmit)
+  const [questions, setQuestions] = useState([])
+  const [score, setScore] = useState(initialStates.score)
+  const [selectedAnswers, setSelectedAnswers] = useState(initialStates.selectedAnswers)
+  const [quizOptions, setQuizOptions] = useState(initialStates.quizOptions)
 
   const [quizUrl, setQuizUrl] = useState(
     `https://opentdb.com/api.php?amount=${quizOptions.numberOfQuestions}`
@@ -115,6 +127,25 @@ function App() {
     console.log(quizUrl)
   }
 
+  function resetStates() {
+    setIsRunning(initialStates.isRunning)
+    setScore(initialStates.score)
+    setQuestions(initialStates.questions)
+    setSelectedAnswers(initialStates.selectedAnswers)
+    setMaySubmit(initialStates.maySubmit)
+    gameOver.current = initialStates.gameOver
+    shouldFetch.current = initialStates.shouldFetch
+  }
+
+  function backToStartScreen() {
+    resetStates()
+    console.log('back to start screen')
+  }
+
+  function quickRestart() {
+    console.log('quick restart')
+  }
+
   function handleAnswerClick(event, selectedAnswerId, questionId) {
     console.clear()
     const questionIndex = questions.findIndex(question => question.id === questionId)
@@ -148,6 +179,8 @@ function App() {
             handleSubmit={handleSubmit}
             handleClear={handleClear}
             handleClick={handleAnswerClick}
+            backToStartScreen={backToStartScreen}
+            quickRestart={quickRestart}
             maySubmit={maySubmit}
             gameOver={gameOver}
             score={score}
