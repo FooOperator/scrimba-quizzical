@@ -5,8 +5,5 @@ export function shuffleArray(array) {
     }
 }
 export function getScore(score, curr) {
-    if (curr.selectedAnswerId === curr.correctAnswerId) {
-        return score + 1
-    }
-    return score
+    return curr.selectedAnswerId === curr.correctAnswerId ? score + 1 : score
 }
