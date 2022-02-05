@@ -55,14 +55,13 @@ const Questionare = (props) => {
                     <ButtonGroup className='d-flex justify-content-center mt-2' >
                         <Button
                             variant='outline-success'
-                            onClick={props.handleSubmit}
-                            disabled={!props.maySubmit}
+                            onClick={props.backToStartScreen}
                         >
                             Back To Start
                         </Button>
                         <Button
                             variant='outline-primary'
-                            onClick={props.handleClear}
+                            onClick={props.quickRestart}
                         >
                             Restart
                         </Button>
