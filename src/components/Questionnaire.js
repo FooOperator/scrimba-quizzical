@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { Button, ButtonGroup, Alert } from "react-bootstrap";
 import Question from "./Question";
 
-const Questionare = (props) => {
+const Questionnaire = (props) => {
     const correctPercentage = parseInt((props.score * 100) / props.questions.length)
     const scoreAlert = (
         <>
@@ -73,4 +73,4 @@ const Questionare = (props) => {
     );
 }
 
-export default Questionare;
+export default Questionnaire;
