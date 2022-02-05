@@ -12,7 +12,7 @@ const Question = ({ questionData, handleClick, disabled }) => {
     return (
         <Card className="bg-dark border-0">
             <Card.Body>
-                <Card.Title>
+                <Card.Title className='text-center'>
                     {questionData.question}
                 </Card.Title>
                 {
