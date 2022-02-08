@@ -1,7 +1,7 @@
 import StartScreen from "./components/StartScreen";
-import { Helmet } from 'react-helmet'
-import React, { useState, useEffect, useRef } from 'react'
 import Questionnaire from "./components/Questionnaire";
+import React, { useState, useEffect, useRef } from 'react'
+import { Helmet } from 'react-helmet'
 import { nanoid } from "nanoid";
 import { getScore } from './utils'
 
