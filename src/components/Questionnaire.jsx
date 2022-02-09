@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { Button, ButtonGroup, Alert } from "react-bootstrap";
 import Question from "./Question";
+import React from 'react'
 
 const Questionnaire = (props) => {
     const correctPercentage = parseInt((props.score * 100) / props.questions.length)
